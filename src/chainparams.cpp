@@ -79,7 +79,7 @@ public:
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.BIP65Height = 388381; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP66Height = 363725; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
-        consensus.powLimit = uint256S("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit = uint256S("00000000000000000000000000000000000000000000ffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1 * 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -124,7 +124,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0xbb027ccd7fdfc2b6b492ea4f940e89b1512d936472e66015e38a3d876e4dc17b"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.emplace_back("dnsseed.wificoin.kunteng.org", false); // Luke Dashjr
+        vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -233,8 +233,8 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet-seed.bitcoin.jonasschnelli.ch", true);
-        vSeeds.emplace_back("seed.tbtc.petertodd.org", true);
+        vSeeds.emplace_back("testnet-seed.wificoin.jonasschnelli.ch", true);
+        vSeeds.emplace_back("seed.twfc.petertodd.org", true);
         vSeeds.emplace_back("testnet-seed.bluematt.me", false);
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);

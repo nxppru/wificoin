@@ -1,11 +1,11 @@
 Sample configuration files for:
 ```
-SystemD: bitcoind.service
-Upstart: bitcoind.conf
-OpenRC:  bitcoind.openrc
-         bitcoind.openrcconf
-CentOS:  bitcoind.init
-OS X:    org.bitcoin.bitcoind.plist
+SystemD: wificoind.service
+Upstart: wificoind.conf
+OpenRC:  wificoind.openrc
+         wificoind.openrcconf
+CentOS:  wificoind.init
+OS X:    org.wificoin.wificoind.plist
 ```
 have been made available to assist packagers in creating node packages here.
 

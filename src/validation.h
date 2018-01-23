@@ -3,11 +3,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VALIDATION_H
-#define BITCOIN_VALIDATION_H
+#ifndef WIFICOIN_VALIDATION_H
+#define WIFICOIN_VALIDATION_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/wificoin-config.h"
 #endif
 
 #include "amount.h"
@@ -483,4 +483,4 @@ void DumpMempool();
 /** Load the mempool from disk. */
 bool LoadMempool();
 
-#endif // BITCOIN_VALIDATION_H
+#endif // WIFICOIN_VALIDATION_H
