@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/wificoin/.wificoin" ]; then
+	WIFICOIND_DEFAULT_DATADIR="/var/lib/wificoin/.wificoin"
+else
+	WIFICOIND_DEFAULT_DATADIR="/var/lib/wificoind"
+fi
+
+WIFICOIND_CONFIGFILE=${WIFICOIND_CONFIGFILE:-/etc/wificoin/wificoin.conf}
+WIFICOIND_PIDDIR=${WIFICOIND_PIDDIR:-/var/run/wificoind}
+WIFICOIND_PIDFILE=${WIFICOIND_PIDFILE:-${WIFICOIND_PIDDIR}/wificoind.pid}
+WIFICOIND_DATADIR=${WIFICOIND_DATADIR:-${WIFICOIND_DEFAULT_DATADIR}}
+WIFICOIND_USER=${WIFICOIND_USER:-${WIFICOIN_USER:-wificoin}}
+WIFICOIND_GROUP=${WIFICOIND_GROUP:-wificoin}
+WIFICOIND_BIN=${WIFICOIND_BIN:-/usr/bin/wificoind}
+WIFICOIND_NICE=${WIFICOIND_NICE:-${NICELEVEL:-0}}
+WIFICOIND_OPTS="${WIFICOIND_OPTS:-${WIFICOIN_OPTS}}"
+
+name="WiFicoin Core Daemon"
+description="WiFicoin cryptocurrency P2P network daemon"
+
+command="/usr/bin/wificoind"
+command_args="-pid=\"${WIFICOIND_PIDFILE}\" \
+		-conf=\"${WIFICOIND_CONFIGFILE}\" \
+		-datadir=\"${WIFICOIND_DATADIR}\" \
+		-daemon \
+		${WIFICOIND_OPTS}"
+
+required_files="${WIFICOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${WIFICOIND_USER} \
+			-N ${WIFICOIND_NICE} -w 2000"
+pidfile="${WIFICOIND_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${WIFICOIND_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${WIFICOIND_USER}:${WIFICOIND_GROUP}" \
+	"${WIFICOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${WIFICOIND_USER}:${WIFICOIND_GROUP}" \
+	"${WIFICOIND_PIDDIR}"
+
+	checkpath -f \
+	-o ${WIFICOIND_USER}:${WIFICOIND_GROUP} \
+	-m 0660 \
+	${WIFICOIND_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${WIFICOIND_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run wificoind."
+		eerror "The setting must appear in ${WIFICOIND_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"WiFicoin Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

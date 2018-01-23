@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=WiFicoin Core
+Comment=Connect to the WiFicoin P2P Network
+Comment[de]=Verbinde mit dem WiFicoin peer-to-peer Netzwerk
+Comment[fr]=WiFicoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=WiFicoin, eşten eşe kriptografik sanal para birimi
+Exec=wificoin-qt %u
+Terminal=false
+Type=Application
+Icon=wificoin128
+MimeType=x-scheme-handler/wificoin;
+Categories=Office;Finance;

@@ -1,0 +1,33 @@
+# /etc/conf.d/wificoind: config file for /etc/init.d/wificoind
+
+# Config file location
+#WIFICOIND_CONFIGFILE="/etc/wificoin/wificoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $WIFICOIND_USER)
+#WIFICOIND_PIDDIR="/var/run/wificoind"
+
+# What filename to give the pidfile
+#WIFICOIND_PIDFILE="${WIFICOIND_PIDDIR}/wificoind.pid"
+
+# Where to write wificoind data (be mindful that the blockchain is large)
+#WIFICOIND_DATADIR="/var/lib/wificoind"
+
+# User and group to own wificoind process
+#WIFICOIND_USER="wificoin"
+#WIFICOIND_GROUP="wificoin"
+
+# Path to wificoind executable
+#WIFICOIND_BIN="/usr/bin/wificoind"
+
+# Nice value to run wificoind under
+#WIFICOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#WIFICOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for wificoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+WIFICOIND_SIGTERM_TIMEOUT=60

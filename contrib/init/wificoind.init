@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  wificoind The wificoin core server.
+#
+#
+# chkconfig: 345 80 20
+# description: wificoind
+# processname: wificoind
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/wificoind, see below
+if [ -f /etc/sysconfig/wificoind ]; then
+        . /etc/sysconfig/wificoind
+fi
+
+RETVAL=0
+
+prog=wificoind
+# you can override the lockfile via WIFICOIND_LOCKFILE in /etc/sysconfig/wificoind
+lockfile=${WIFICOIND_LOCKFILE-/var/lock/subsys/wificoind}
+
+# wificoind defaults to /usr/bin/wificoind, override with WIFICOIND_BIN
+wificoind=${WIFICOIND_BIN-/usr/bin/wificoind}
+
+# wificoind opts default to -disablewallet, override with WIFICOIND_OPTS
+wificoind_opts=${WIFICOIND_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $wificoind $wificoind_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
