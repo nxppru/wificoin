@@ -79,7 +79,7 @@ public:
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.BIP65Height = 388381; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP66Height = 363725; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
-        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1 * 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -175,18 +175,18 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 1680000;
         consensus.BIP34Height = 21111;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
         consensus.BIP65Height = 581885; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
         consensus.BIP66Height = 330776; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
-        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.nPowTargetTimespan = 1 * 24 * 60 * 60; // two weeks
+        consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 8208; // 75% for testchains
+        consensus.nMinerConfirmationWindow = 8640; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -214,19 +214,18 @@ public:
         nDefaultPort = 18333;
         nPruneAfterHeight = 1000;
 
-	genesis = CreateGenesisBlock(1516254420, 3625992097, 0x1d00ffff, 1, 50 * COIN);
+		genesis = CreateGenesisBlock(1516254420, 3625992097, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x0000000025f2cf92357359e4dc3eca8c70937751605f8e6bc256e5f27bd1c5b4"));
         assert(genesis.hashMerkleRoot == uint256S("0xbb027ccd7fdfc2b6b492ea4f940e89b1512d936472e66015e38a3d876e4dc17b"));
-
+		
+		
         vFixedSeeds.clear();
         vSeeds.clear();
-#if	0
-        // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet-seed.wificoin.jonasschnelli.ch", true);
-        vSeeds.emplace_back("seed.twfc.petertodd.org", true);
-        vSeeds.emplace_back("testnet-seed.bluematt.me", false);
-#endif
+		
+		vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
+        vSeeds.emplace_back("emqtt.kunteng.org", false); // liudf for test 
+
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
@@ -246,13 +245,22 @@ public:
             }
         };
 		
+		chainTxData = ChainTxData{
+            0,
+            0,
+            0
+        };
+
+#if	0
         chainTxData = ChainTxData{
             // Data as of block 00000000000001c200b9790dc637d3bb141fe77d155b966ed775b17e109f7c6c (height 1156179)
             1501802953,
             14706531,
             0.15
         };
+#endif
     }
+
 };
 
 /**
