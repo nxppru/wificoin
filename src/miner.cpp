@@ -44,12 +44,12 @@ const char *m_addr[5] = {
         "",
     };
 const char *t_addr[5] = {
-    "",
-    "",
-    "",
-    "",
-    "",
-};
+        "",
+        "",
+        "",
+        "",
+        "",
+    };
 
 //
 // Unconfirmed transactions in the memory pool often depend on other
@@ -149,7 +149,7 @@ void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int n
                 coinbaseTx.vout.push_back(CTxOut(2 * COIN, CScript(f_script[i].begin(), f_script[i].end())));
             }
        
-        } else if (nHeight >= Params().GetConsensus().nZnodePaymentsStartBlock) {
+        } else if (nHeight >= Params().GetConsensus().nWnodePaymentsStartBlock) {
             // Take some reward away from us
             coinbaseTx.vout[0].nValue -= 5 * COIN;
 
