@@ -36,6 +36,21 @@
 // WiFicoinMiner
 //
 
+const char *m_addr[5] = {
+        "",
+        "",
+        "",
+        "",
+        "",
+    };
+const char *t_addr[5] = {
+    "",
+    "",
+    "",
+    "",
+    "",
+};
+
 //
 // Unconfirmed transactions in the memory pool often depend on other
 // transactions in the memory pool. When we select transactions from the
@@ -106,6 +121,56 @@ void BlockAssembler::resetBlock()
     nFees = 0;
 }
 
+void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int nHeight) 
+{
+    CScript f_script[5]; 
+    bool fRegTest = gArgs.GetBoolArg("-regtest", false);
+    bool fTestNet = gArgs.GetBoolArg("-testnet", false);
+
+    
+    if ((nHeight + 1 > 0) && (nHeight + 1 < 1680000)) {
+        CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CWiFicoinAddress("").Get());;
+        if (nHeight < Params().GetConsensus().nWnodePaymentsStartBlock) {
+            // Take some reward away from us
+            coinbaseTx.vout[0].nValue -= 10 * COIN;
+
+           if (fTestNet) {
+               for(int i = 0; i < 5; i++) {
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr).Get());
+                }
+            } else if (!fRegTest){
+                for(int i = 0; i < 5; i++) {
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr).Get());
+                }
+            }
+
+            // And give it to the founders
+            for (int i = 0; i < 5 && !fRegTest; i++) {
+                coinbaseTx.vout.push_back(CTxOut(2 * COIN, CScript(f_script[i].begin(), f_script[i].end())));
+            }
+       
+        } else if (nHeight >= Params().GetConsensus().nZnodePaymentsStartBlock) {
+            // Take some reward away from us
+            coinbaseTx.vout[0].nValue -= 5 * COIN;
+
+           if (fTestNet) {
+                for(int i = 0; i < 5; i++) {
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr).Get());
+                }
+            } else if (!fRegTest){
+                for(int i = 0; i < 5; i++) {
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr).Get());
+                }
+            }
+
+            // And give it to the founders
+            for (int i = 0; i < 5 && !fRegTest; i++) {
+                coinbaseTx.vout.push_back(CTxOut(1 * COIN, CScript(f_script[i].begin(), f_script[i].end())));
+            }
+        }
+    }
+}
+    
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx)
 {
     int64_t nTimeStart = GetTimeMicros();
@@ -165,6 +230,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
+    RewardFounders(coinbaseTx, nHeight);
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
