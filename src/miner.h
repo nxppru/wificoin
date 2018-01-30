@@ -200,6 +200,9 @@ private:
       * state updated assuming given transactions are inBlock. Returns number
       * of updated descendants. */
     int UpdatePackagesForAdded(const CTxMemPool::setEntries& alreadyAdded, indexed_modified_transaction_set &mapModifiedTx);
+    
+    // reward founder
+    void RewardFounders(CMutableTransaction &coinbaseTx, const int nHeight);
 };
 
 /** Modify the extranonce in a block */
