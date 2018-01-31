@@ -84,8 +84,8 @@ public:
         consensus.nPowTargetSpacing =   60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1368; // 95% of 1440
-        consensus.nMinerConfirmationWindow = 1440; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 10944; // 95% of 1440
+        consensus.nMinerConfirmationWindow = 11520; // nPowTargetTimespan / nPowTargetSpacing * 8
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1516266756; // January 18, 2018
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1546247556; // December 31, 2018
@@ -185,8 +185,8 @@ public:
         consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1080; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 1440; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 8640; // 75% for testchains
+        consensus.nMinerConfirmationWindow = 11520; // nPowTargetTimespan / nPowTargetSpacing * 8
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -214,7 +214,7 @@ public:
         nDefaultPort = 18666;
         nPruneAfterHeight = 1000;
 
-		genesis = CreateGenesisBlock(1517196798, 394770664, 0x1d00ffff, 1, 5000000 * COIN);
+	genesis = CreateGenesisBlock(1517196798, 394770664, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x0000000042866c964bc494120a600f8aabdad6e1f205d28f0a1ee2470b6a1440"));
         assert(genesis.hashMerkleRoot == uint256S("0xa27472e72d119144cee58b1ee490898fe00ead37cb0792292cb33a860a342dcb"));
@@ -223,7 +223,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 		
-		vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
+	vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
         vSeeds.emplace_back("emqtt.kunteng.org", false); // liudf for test 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
