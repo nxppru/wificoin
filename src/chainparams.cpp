@@ -106,7 +106,7 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x01"); 
 		
-		consensus.nZnodePaymentsStartBlock = 840000;
+		consensus.nWnodePaymentsStartBlock = 840000;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -129,7 +129,7 @@ public:
         vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
         vSeeds.emplace_back("emqtt.kunteng.org", false); // liudf for test 
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,135);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
@@ -209,7 +209,7 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
 
-		consensus.nZnodePaymentsStartBlock = 50;
+		consensus.nWnodePaymentsStartBlock = 50;
 
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;

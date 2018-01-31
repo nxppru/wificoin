@@ -26,6 +26,7 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validationinterface.h"
+#include "base58.h"
 
 #include <algorithm>
 #include <queue>
@@ -37,18 +38,18 @@
 //
 
 const char *m_addr[5] = {
-        "",
-        "",
-        "",
-        "",
-        "",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
     };
 const char *t_addr[5] = {
-        "",
-        "",
-        "",
-        "",
-        "",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
     };
 
 //
@@ -129,18 +130,17 @@ void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int n
 
     
     if ((nHeight + 1 > 0) && (nHeight + 1 < 1680000)) {
-        CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CWiFicoinAddress("").Get());;
         if (nHeight < Params().GetConsensus().nWnodePaymentsStartBlock) {
             // Take some reward away from us
             coinbaseTx.vout[0].nValue -= 10 * COIN;
 
            if (fTestNet) {
                for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr).Get());
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr[i]).Get());
                 }
             } else if (!fRegTest){
                 for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr).Get());
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr[i]).Get());
                 }
             }
 
@@ -155,11 +155,11 @@ void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int n
 
            if (fTestNet) {
                 for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr).Get());
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr[i]).Get());
                 }
             } else if (!fRegTest){
                 for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr).Get());
+                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr[i]).Get());
                 }
             }
 

@@ -64,7 +64,7 @@ struct Params {
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 
-	uint32_t nWnodePaymentsStartBlock;
+	int nWnodePaymentsStartBlock;
 };
 } // namespace Consensus
 
