@@ -38,11 +38,11 @@
 //
 
 const char *m_addr[5] = {
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
+        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
+        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
+        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
+        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
+        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
     };
 const char *t_addr[5] = {
         "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
