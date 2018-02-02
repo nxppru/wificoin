@@ -38,11 +38,11 @@
 //
 
 const char *m_addr[5] = {
-        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
-        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
-        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
-        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
-        "wT5WKwohjboPnKTKp2pJKziMSS3VFohrPn",
+        "wMqY4aWujzbh3wdcUnZSTAg2nARHQ27vwQ", //wificoin
+        "wiV2JH8N3TGJTUnJiT25Nf4BESwBTechzA", // liudf
+        "wNmu1SDBq3qj8URFDZN4ZRX1wHND793j2q", // lup
+        "wdEQx2TrF89JFfgYGUoPLSrrXtTgmmn7Q2", // zhangzf
+        "wMiWEo8oVBKjM25Mx4DVAo1j8VJxKCdR77", // investor
     };
 const char *t_addr[5] = {
         "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
@@ -228,9 +228,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
     coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
-    coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
-    coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
+    coinbaseTx.vout[0].nValue += nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
     RewardFounders(coinbaseTx, nHeight);
+    coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
