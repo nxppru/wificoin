@@ -372,6 +372,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     UniValue lpval = NullUniValue;
     std::set<std::string> setClientRules;
     int64_t nMaxVersionPreVB = -1;
+	bool coinbasetxn = true;
     if (!request.params[0].isNull())
     {
         const UniValue& oparam = request.params[0].get_obj();
@@ -538,6 +539,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 
     UniValue aCaps(UniValue::VARR); aCaps.push_back("proposal");
 
+	UniValue txCoinbase = NullUniValue;
     UniValue transactions(UniValue::VARR);
     std::map<uint256, int64_t> setTxIndex;
     int i = 0;
@@ -546,7 +548,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         uint256 txHash = tx.GetHash();
         setTxIndex[txHash] = i++;
 
-        if (tx.IsCoinBase())
+        if (tx.IsCoinBase() && !coinbasetxn)
             continue;
 
         UniValue entry(UniValue::VOBJ);
@@ -573,7 +575,21 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         entry.push_back(Pair("sigops", nTxSigOps));
         entry.push_back(Pair("weight", GetTransactionWeight(tx)));
 
-        transactions.push_back(entry);
+		if (tx.IsCoinBase()) {
+			// Show founders' reward if it is required
+		    if (tx.vout.size() > 1) {
+				for (int i = 1; i < tx.vout.size(); i++) {
+					char szfounders[16] = {0};
+					snprintf(szfounders, 16, "foundersreward%d", i);
+					entry.push_back(Pair(szfounders, (int64_t)tx.vout[i].nValue));
+				}
+			}
+			entry.push_back(Pair("required", true));
+			txCoinbase = entry;
+		} else {
+			transactions.push_back(entry);
+		}
+							
     }
 
     UniValue aux(UniValue::VOBJ);
@@ -646,8 +662,13 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
     result.push_back(Pair("transactions", transactions));
-    result.push_back(Pair("coinbaseaux", aux));
-    result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0]->vout[0].nValue));
+	if (coinbasetxn) {
+		assert(txCoinbase.isObject());
+		result.push_back(Pair("coinbasetxn", txCoinbase));
+	} else {
+    	result.push_back(Pair("coinbaseaux", aux));
+    	result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0]->vout[0].nValue));
+	}
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1));
