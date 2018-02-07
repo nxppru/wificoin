@@ -373,6 +373,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     std::set<std::string> setClientRules;
     int64_t nMaxVersionPreVB = -1;
 	bool coinbasetxn = true;
+	std::string strCoinbaseAddr;
     if (!request.params[0].isNull())
     {
         const UniValue& oparam = request.params[0].get_obj();
@@ -430,6 +431,11 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
                 nMaxVersionPreVB = uvMaxVersion.get_int64();
             }
         }
+		
+		const UniValue& coinbaseAddr = find_value(oparam, "coinbase-addr");
+		if (coinbaseAddr.isStr()) {
+			strCoinbaseAddr = coinbaseAddr.get_str();
+		}
     }
 
     if (strMode != "template")
@@ -519,8 +525,20 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         fLastTemplateSupportsSegwit = fSupportsSegwit;
 
         // Create new block
-        CScript scriptDummy = CScript() << OP_TRUE;
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(scriptDummy, fSupportsSegwit);
+		// liudf 20180206 for test
+		if (strCoinbaseAddr.empty()) {
+        	CScript scriptDummy = CScript() << OP_TRUE;
+        	pblocktemplate = BlockAssembler(Params()).CreateNewBlock(scriptDummy, fSupportsSegwit);
+		} else {
+			CKeyID keyID;
+    		CWiFicoinAddress addr;
+			if ( addr.SetString(strCoinbaseAddr) && addr.GetKeyID(keyID) ) {
+				CScript scriptPubKey = CScript() << OP_DUP << OP_HASH160 << ToByteVector(keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
+        		pblocktemplate = BlockAssembler(Params()).CreateNewBlock(scriptPubKey, fSupportsSegwit);
+			} else {
+            	throw JSONRPCError(RPC_INVALID_COINBASE_ADDR, "Invalid coinbase address");
+			}
+		}
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
@@ -578,7 +596,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 		if (tx.IsCoinBase()) {
 			// Show founders' reward if it is required
 		    if (tx.vout.size() > 1) {
-				for (int i = 1; i < tx.vout.size(); i++) {
+				for (size_t i = 1; i < tx.vout.size(); i++) {
 					char szfounders[16] = {0};
 					snprintf(szfounders, 16, "foundersreward%d", i);
 					entry.push_back(Pair(szfounders, (int64_t)tx.vout[i].nValue));
