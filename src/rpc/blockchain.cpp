@@ -601,6 +601,129 @@ UniValue getmempoolentry(const JSONRPCRequest& request)
     return info;
 }
 
+/* Added by zhangzf 20180208 2F start */
+UniValue getblockhashes(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() < 2)
+        throw std::runtime_error(
+            "getblockhashes timestamp\n"
+            "\nReturns array of hashes of blocks within the timestamp range provided.\n"
+            "\nArguments:\n"
+            "1. high         (numeric, required) The newer block timestamp\n"
+            "2. low          (numeric, required) The older block timestamp\n"
+            "3. options      (string, required) A json object\n"
+            "    {\n"
+            "      \"noOrphans\":true   (boolean) will only include blocks on the main chain\n"
+            "      \"logicalTimes\":true   (boolean) will include logical timestamps with hashes\n"
+            "    }\n"
+            "\nResult:\n"
+            "[\n"
+            "  \"hash\"         (string) The block hash\n"
+            "]\n"
+            "[\n"
+            "  {\n"
+            "    \"blockhash\": (string) The block hash\n"
+            "    \"logicalts\": (numeric) The logical timestamp\n"
+            "  }\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getblockhashes", "1231614698 1231024505")
+            + HelpExampleRpc("getblockhashes", "1231614698, 1231024505")
+            + HelpExampleCli("getblockhashes", "1231614698 1231024505 '{\"noOrphans\":false, \"logicalTimes\":true}'")
+            );
+
+    unsigned int high = request.params[0].get_int();
+    unsigned int low = request.params[1].get_int();
+    bool fActiveOnly = false;
+    bool fLogicalTS = false;
+
+    if (request.params.size() > 2) {
+        if (request.params[2].isObject()) {
+            UniValue noOrphans = find_value(request.params[2].get_obj(), "noOrphans");
+            UniValue returnLogical = find_value(request.params[2].get_obj(), "logicalTimes");
+
+            if (noOrphans.isBool())
+                fActiveOnly = noOrphans.get_bool();
+
+            if (returnLogical.isBool())
+                fLogicalTS = returnLogical.get_bool();
+        }
+    }
+
+    std::vector<std::pair<uint256, unsigned int> > blockHashes;
+
+    if (fActiveOnly)
+        LOCK(cs_main);
+
+    if (!GetTimestampIndex(high, low, fActiveOnly, blockHashes)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "No information available for block hashes");
+    }
+
+    UniValue result(UniValue::VARR);
+
+    for (std::vector<std::pair<uint256, unsigned int> >::const_iterator it=blockHashes.begin(); it!=blockHashes.end(); it++) {
+        if (fLogicalTS) {
+            UniValue item(UniValue::VOBJ);
+            item.push_back(Pair("blockhash", it->first.GetHex()));
+            item.push_back(Pair("logicalts", (int)it->second));
+            result.push_back(item);
+        } else {
+            result.push_back(it->first.GetHex());
+        }
+    }
+
+    return result;
+}
+
+UniValue getspentinfo(const JSONRPCRequest& request)
+{
+
+    if (request.fHelp || request.params.size() != 1 || !request.params[0].isObject())
+        throw std::runtime_error(
+            "getspentinfo\n"
+            "\nReturns the txid and index where an output is spent.\n"
+            "\nArguments:\n"
+            "{\n"
+            "  \"txid\" (string) The hex string of the txid\n"
+            "  \"index\" (number) The start block height\n"
+            "}\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"txid\"  (string) The transaction id\n"
+            "  \"index\"  (number) The spending input index\n"
+            "  ,...\n"
+            "}\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getspentinfo", "'{\"txid\": \"0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9\", \"index\": 0}'")
+            + HelpExampleRpc("getspentinfo", "{\"txid\": \"0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9\", \"index\": 0}")
+        );
+
+    UniValue txidValue = find_value(request.params[0].get_obj(), "txid");
+    UniValue indexValue = find_value(request.params[0].get_obj(), "index");
+
+    if (!txidValue.isStr() || !indexValue.isNum()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid txid or index");
+    }
+
+    uint256 txid = ParseHashV(txidValue, "txid");
+    int outputIndex = indexValue.get_int();
+
+    CSpentIndexKey key(txid, outputIndex);
+    CSpentIndexValue value;
+
+    if (!GetSpentIndex(key, value)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to get spent info");
+    }
+
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("txid", value.txid.GetHex()));
+    obj.push_back(Pair("index", (int)value.inputIndex));
+    obj.push_back(Pair("height", value.blockHeight));
+
+    return obj;
+}
+/* End zhangzf */
+
 UniValue getblockhash(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -1541,6 +1664,10 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getblockcount",          &getblockcount,          true,  {} },
     { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbosity|verbose"} },
     { "blockchain",         "getblockhash",           &getblockhash,           true,  {"height"} },
+    /* Added by zhangzf 20180208 */
+    { "blockchain",         "getblockhashes",         &getblockhashes,         true,  {"hige", "low", "options"} },
+    { "blockchain",         "getspentinfo",           &getspentinfo,           false, {} },
+
     { "blockchain",         "getblockheader",         &getblockheader,         true,  {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           true,  {} },
     { "blockchain",         "getdifficulty",          &getdifficulty,          true,  {} },
