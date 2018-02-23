@@ -372,7 +372,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     UniValue lpval = NullUniValue;
     std::set<std::string> setClientRules;
     int64_t nMaxVersionPreVB = -1;
-	bool coinbasetxn = true;
+	bool coinbasetxn = false;
 	std::string strCoinbaseAddr;
     if (!request.params[0].isNull())
     {
@@ -435,6 +435,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 		const UniValue& coinbaseAddr = find_value(oparam, "coinbase-addr");
 		if (coinbaseAddr.isStr()) {
 			strCoinbaseAddr = coinbaseAddr.get_str();
+			coinbasetxn = true;
 		}
     }
 
@@ -598,7 +599,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 		    if (tx.vout.size() > 1) {
 				for (size_t i = 1; i < tx.vout.size(); i++) {
 					char szfounders[16] = {0};
-					snprintf(szfounders, 16, "foundersreward%d", i);
+					snprintf(szfounders, 16, "foundersreward%d", (int)i);
 					entry.push_back(Pair(szfounders, (int64_t)tx.vout[i].nValue));
 				}
 			}

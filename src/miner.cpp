@@ -130,6 +130,7 @@ void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int n
 
     
     if ((nHeight + 1 > 0) && (nHeight + 1 < 1680000)) {
+		LogPrintf("RewardFounders():  ");
         if (nHeight < Params().GetConsensus().nWnodePaymentsStartBlock) {
             // Take some reward away from us
             coinbaseTx.vout[0].nValue -= 10 * COIN;
@@ -229,13 +230,16 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout.resize(1);
     coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue += nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
-    RewardFounders(coinbaseTx, nHeight);
+	if (!(scriptPubKeyIn.size() == 1 && scriptPubKeyIn[0] == OP_TRUE)) { // not dummy script
+    	RewardFounders(coinbaseTx, nHeight);
+	}
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
 
-    LogPrintf("CreateNewBlock(): block weight: %u txs: %u fees: %ld sigops %d\n", GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
+    LogPrintf("CreateNewBlock(): block weight: %u txs: %u fees: %ld sigops %d nValue %ld\n", 
+					GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost, pblock->vtx[0]->vout[0].nValue);
 
     // Fill in header
     pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
