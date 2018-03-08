@@ -3203,6 +3203,20 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
     return commitment;
 }
 
+static bool CheckDiffStep(const CBlockHeader *block, const CBlockIndex *pindexPrev, const Consensus::Params& params)
+{
+	unsigned int newSize = (block->nBits & 0xff000000)>>24;
+	unsigned int prevSize = (pindexPrev->nBits & 0xff000000)>>24;
+	
+	assert(newSize > 0 && prevSize > 0);
+	if ((pindexPrev->nHeight+1) % params.DifficultyAdjustmentInterval() != 0 && newSize < prevSize) {
+		LogPrintf("CheckDiffStep(): prevSize  %d newSize  %d\n", prevSize, newSize);
+		return false;
+	}
+
+	return true;
+}
+
 /** Context-dependent validity checks.
  *  By "context", we mean only the previous block headers, but not the UTXO
  *  set; UTXO-related validity checks are done in ConnectBlock(). */
@@ -3215,6 +3229,10 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     const Consensus::Params& consensusParams = params.GetConsensus();
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+	
+	// liudf added 20180308
+	if (!CheckDiffStep(&block, pindexPrev, consensusParams))
+        return state.DoS(100, false, REJECT_INVALID, "bad-diffstep", false, "incorrect step of POW");
 
     // Check against checkpoints
     if (fCheckpointsEnabled) {

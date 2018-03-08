@@ -53,12 +53,11 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
         return pindexLast->nBits;
 
     // Limit adjustment step
-	// liudf modified 20180306 from 4 to 2
     int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    if (nActualTimespan < params.nPowTargetTimespan/2)
-        nActualTimespan = params.nPowTargetTimespan/2;
-    if (nActualTimespan > params.nPowTargetTimespan*2)
-        nActualTimespan = params.nPowTargetTimespan*2;
+    if (nActualTimespan < params.nPowTargetTimespan/4)
+        nActualTimespan = params.nPowTargetTimespan/4;
+    if (nActualTimespan > params.nPowTargetTimespan*4)
+        nActualTimespan = params.nPowTargetTimespan*4;
 
     // Retarget
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
