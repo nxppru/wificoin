@@ -535,6 +535,13 @@ BOOST_AUTO_TEST_CASE(bignum_SetCompact)
     num.SetCompact(0xff123456, &fNegative, &fOverflow);
     BOOST_CHECK_EQUAL(fNegative, false);
     BOOST_CHECK_EQUAL(fOverflow, true);
+
+	num.SetCompact(0x1f0fffff, &fNegative, &fOverflow);
+    BOOST_CHECK_EQUAL(num.GetHex(), "000fffff00000000000000000000000000000000000000000000000000000000");
+    BOOST_CHECK_EQUAL(num.GetCompact(), 0x1f0fffffU);
+    BOOST_CHECK_EQUAL(fNegative, false);
+    BOOST_CHECK_EQUAL(fOverflow, false);
+
 }
 
 
