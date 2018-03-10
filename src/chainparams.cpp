@@ -20,7 +20,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-    txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    txNew.vin[0].scriptSig = CScript() << 521142271 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
@@ -120,10 +120,10 @@ public:
         nDefaultPort = 8666;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1516254420, 3625992097, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1520676839, 1726, 0x1f0fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000000025f2cf92357359e4dc3eca8c70937751605f8e6bc256e5f27bd1c5b4"));
-        assert(genesis.hashMerkleRoot == uint256S("0xbb027ccd7fdfc2b6b492ea4f940e89b1512d936472e66015e38a3d876e4dc17b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000b1b86443cb6350091972af04a59825c59f9a77635b9e05b9fc6652e5dd3d6"));
+        assert(genesis.hashMerkleRoot == uint256S("0x3042ef4d8be9c34673691cf2a144b40e949d373c8e4d182c8e390236e07b7978"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
@@ -209,10 +209,10 @@ public:
         nDefaultPort = 18666;
         nPruneAfterHeight = 1000;
 
-		genesis = CreateGenesisBlock(1519367359, 3854109971, 0x1d00ffff, 1, 50 * COIN);
+		genesis = CreateGenesisBlock(1520677893, 430, 0x1f0fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000000c3f64dd3ecc843beb8244bfe27c0444d91fb1b5bf46bc5da408b5e84"));
-        assert(genesis.hashMerkleRoot == uint256S("0xbb027ccd7fdfc2b6b492ea4f940e89b1512d936472e66015e38a3d876e4dc17b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000d0739804a2e40428154033141fba634ffcc4be7faf3d6b5401b60116f3709"));
+        assert(genesis.hashMerkleRoot == uint256S("0x3042ef4d8be9c34673691cf2a144b40e949d373c8e4d182c8e390236e07b7978"));
 		
 		
         vFixedSeeds.clear();
@@ -349,5 +349,5 @@ void SelectParams(const std::string& network)
 
 void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
 {
-    globalChainParams->UpdateVersionBitsParameters(d, nStartTime, nTimeout);
+	globalChainParams->UpdateVersionBitsParameters(d, nStartTime, nTimeout);
 }
