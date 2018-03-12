@@ -126,8 +126,8 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x3042ef4d8be9c34673691cf2a144b40e949d373c8e4d182c8e390236e07b7978"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
-        vSeeds.emplace_back("emqtt.kunteng.org", false); // liudf for test 
+        vSeeds.emplace_back("wifidog.kunteng.org", false); 
+        vSeeds.emplace_back("hangban.mconnect.cn", false); 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,135);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
