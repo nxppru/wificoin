@@ -64,7 +64,9 @@ struct Params {
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 
-	int nWnodePaymentsStartBlock;
+	int GetLastFoundersRewardBlockHeight() const {
+        return nSubsidyHalvingInterval;
+    }
 };
 } // namespace Consensus
 
