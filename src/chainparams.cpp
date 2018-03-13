@@ -351,3 +351,33 @@ void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
 	globalChainParams->UpdateVersionBitsParameters(d, nStartTime, nTimeout);
 }
+
+// Block height must be >0 and <=last founders reward block height
+// Index variable i ranges from 0 - (vFoundersRewardAddress.size()-1)
+std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
+    int maxHeight = consensus.GetLastFoundersRewardBlockHeight();
+    assert(nHeight > 0 && nHeight <= maxHeight);
+
+    size_t addressChangeInterval = (maxHeight + vFoundersRewardAddress.size()) / vFoundersRewardAddress.size();
+    size_t i = nHeight / addressChangeInterval;
+    return vFoundersRewardAddress[i];
+}
+
+// Block height must be >0 and <=last founders reward block height
+// The founders reward address is expected to be a multisig (P2SH) address
+CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
+    assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
+
+    CBitcoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
+    assert(address.IsValid());
+    assert(address.IsScript());
+    CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
+    CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+    return script;
+}
+
+std::string CChainParams::GetFoundersRewardAddressAtIndex(int i) const {
+    assert(i >= 0 && i < vFoundersRewardAddress.size());
+    return vFoundersRewardAddress[i];
+}
+
