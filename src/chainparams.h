@@ -94,6 +94,7 @@ protected:
     bool fMineBlocksOnDemand;
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
+	std::vector<std::string> vFoundersRewardAddress;
 };
 
 /**
