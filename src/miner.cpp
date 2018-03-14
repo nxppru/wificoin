@@ -128,47 +128,17 @@ void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int n
     bool fRegTest = gArgs.GetBoolArg("-regtest", false);
     bool fTestNet = gArgs.GetBoolArg("-testnet", false);
 
-    
-    if ((nHeight + 1 > 0) && (nHeight + 1 < 1680000)) {
-		LogPrintf("RewardFounders():  ");
-        if (nHeight < Params().GetConsensus().nWnodePaymentsStartBlock) {
-            // Take some reward away from us
-            coinbaseTx.vout[0].nValue -= 10 * COIN;
+	if (fRegTest || fTestNet)
+		return;
+	
+    if ((nHeight + 1 > 0) && (nHeight + 1 < Params().GetConsensus().GetLastFoundersRewardBlockHeight())) {
+		// Founders reward is 20% of the block subsidy
+		auto vFoundersReward = coinbaseTx.vout[0].nValue / 5;
+		// Take some reward away from us
+		coinbaseTx.vout[0].nValue -= vFoundersReward;
 
-           if (fTestNet) {
-               for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr[i]).Get());
-                }
-            } else if (!fRegTest){
-                for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr[i]).Get());
-                }
-            }
-
-            // And give it to the founders
-            for (int i = 0; i < 5 && !fRegTest; i++) {
-                coinbaseTx.vout.push_back(CTxOut(2 * COIN, CScript(f_script[i].begin(), f_script[i].end())));
-            }
-       
-        } else if (nHeight >= Params().GetConsensus().nWnodePaymentsStartBlock) {
-            // Take some reward away from us
-            coinbaseTx.vout[0].nValue -= 5 * COIN;
-
-           if (fTestNet) {
-                for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(t_addr[i]).Get());
-                }
-            } else if (!fRegTest){
-                for(int i = 0; i < 5; i++) {
-                    f_script[i] = GetScriptForDestination(CWiFicoinAddress(m_addr[i]).Get());
-                }
-            }
-
-            // And give it to the founders
-            for (int i = 0; i < 5 && !fRegTest; i++) {
-                coinbaseTx.vout.push_back(CTxOut(1 * COIN, CScript(f_script[i].begin(), f_script[i].end())));
-            }
-        }
+		// And give it to the founders
+		coinbaseTx.vout.push_back(CTxOut(vFoundersReward, chainparams.GetFoundersRewardScriptAtHeight(nHeight)));
     }
 }
     
