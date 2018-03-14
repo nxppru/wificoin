@@ -165,7 +165,7 @@ public:
 			"wMiWEo8oVBKjM25Mx4DVAo1j8VJxKCdR77", 
 			"wgqANUu2RyWiqamp7x8FD1mTKkKy1BZAFu",
 			"wN7Hw4LosbtRMQ8b67eoKR3YuKbrB4Ec8s",
-		}
+		};
 		
 		assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
@@ -376,7 +376,7 @@ std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
 CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
     assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
 
-    CWificoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
+    CWiFicoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
     assert(address.IsScript());
     CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
