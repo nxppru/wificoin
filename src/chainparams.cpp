@@ -120,10 +120,10 @@ public:
         nDefaultPort = 8666;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1520676839, 1726, 0x1f0fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1521003343, 1599, 0x1f0fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000b1b86443cb6350091972af04a59825c59f9a77635b9e05b9fc6652e5dd3d6"));
-        assert(genesis.hashMerkleRoot == uint256S("0x3042ef4d8be9c34673691cf2a144b40e949d373c8e4d182c8e390236e07b7978"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000ac30ada38ecdf3386074d2155eedb1452902a9c736977b95e1e0dde43aec4"));
+        assert(genesis.hashMerkleRoot == uint256S("0x9b6d4138319edb7009d1536ee37c7c1c74e7a0eaa5e6c5243625f9635f4bd996"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("wifidog.kunteng.org", false); 
@@ -219,17 +219,16 @@ public:
         nDefaultPort = 18666;
         nPruneAfterHeight = 1000;
 
-		genesis = CreateGenesisBlock(1520677893, 430, 0x1f0fffff, 1, 50 * COIN);
+		genesis = CreateGenesisBlock(1521003343, 1599, 0x1f0fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000d0739804a2e40428154033141fba634ffcc4be7faf3d6b5401b60116f3709"));
-        assert(genesis.hashMerkleRoot == uint256S("0x3042ef4d8be9c34673691cf2a144b40e949d373c8e4d182c8e390236e07b7978"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000ac30ada38ecdf3386074d2155eedb1452902a9c736977b95e1e0dde43aec4"));
+        assert(genesis.hashMerkleRoot == uint256S("0x9b6d4138319edb7009d1536ee37c7c1c74e7a0eaa5e6c5243625f9635f4bd996"));
 		
 		
         vFixedSeeds.clear();
         vSeeds.clear();
 		
 		vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
-        vSeeds.emplace_back("emqtt.kunteng.org", false); // liudf for test 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,95);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
