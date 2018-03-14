@@ -109,7 +109,6 @@ void BlockAssembler::resetBlock()
 
 void BlockAssembler::RewardFounders(CMutableTransaction &coinbaseTx, const int nHeight) 
 {
-    CScript f_script[5]; 
     bool fRegTest = gArgs.GetBoolArg("-regtest", false);
     bool fTestNet = gArgs.GetBoolArg("-testnet", false);
 
