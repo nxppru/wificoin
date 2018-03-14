@@ -158,6 +158,18 @@ public:
             0,
             0
         };
+		
+		vFoundersRewardAddress = {
+			"wMqY4aWujzbh3wdcUnZSTAg2nARHQ27vwQ", 
+			"wiV2JH8N3TGJTUnJiT25Nf4BESwBTechzA", 
+			"wNmu1SDBq3qj8URFDZN4ZRX1wHND793j2q", 
+			"wdEQx2TrF89JFfgYGUoPLSrrXtTgmmn7Q2", 
+			"wMiWEo8oVBKjM25Mx4DVAo1j8VJxKCdR77", 
+			"wgqANUu2RyWiqamp7x8FD1mTKkKy1BZAFu",
+			"wN7Hw4LosbtRMQ8b67eoKR3YuKbrB4Ec8s",
+		}
+		
+		assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
 };
 
