@@ -378,9 +378,6 @@ CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
 
     CWiFicoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
-	//assert(address.IsScript());
-    //CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
-    //CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
 	CScript script = GetScriptForDestination(address.Get());
     return script;
 }
