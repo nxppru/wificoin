@@ -105,8 +105,6 @@ public:
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x01"); 
-		
-		consensus.nWnodePaymentsStartBlock = 840000;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -211,8 +209,6 @@ public:
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
-
-		consensus.nWnodePaymentsStartBlock = 50;
 
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
@@ -380,7 +376,7 @@ std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
 CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
     assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
 
-    CBitcoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
+    CWificoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
     assert(address.IsScript());
     CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
