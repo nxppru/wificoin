@@ -367,8 +367,7 @@ std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
     int maxHeight = consensus.GetLastFoundersRewardBlockHeight();
     assert(nHeight > 0 && nHeight <= maxHeight);
 
-    size_t addressChangeInterval = (maxHeight + vFoundersRewardAddress.size()) / vFoundersRewardAddress.size();
-    size_t i = nHeight / addressChangeInterval;
+    size_t i = nHeight % vFoundersRewardAddress.size();
     return vFoundersRewardAddress[i];
 }
 
@@ -379,9 +378,10 @@ CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
 
     CWiFicoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
-    assert(address.IsScript());
-    CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
-    CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+	//assert(address.IsScript());
+    //CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
+    //CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+	CScript script = GetScriptForDestination(address.Get());
     return script;
 }
 
