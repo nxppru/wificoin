@@ -37,21 +37,6 @@
 // WiFicoinMiner
 //
 
-const char *m_addr[5] = {
-        "wMqY4aWujzbh3wdcUnZSTAg2nARHQ27vwQ", //wificoin
-        "wiV2JH8N3TGJTUnJiT25Nf4BESwBTechzA", // liudf
-        "wNmu1SDBq3qj8URFDZN4ZRX1wHND793j2q", // lup
-        "wdEQx2TrF89JFfgYGUoPLSrrXtTgmmn7Q2", // zhangzf
-        "wMiWEo8oVBKjM25Mx4DVAo1j8VJxKCdR77", // investor
-    };
-const char *t_addr[5] = {
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-        "1hKAfwTnzwtzqNnL5Bxdu6rNje5spZKHW",
-    };
-
 //
 // Unconfirmed transactions in the memory pool often depend on other
 // transactions in the memory pool. When we select transactions from the
