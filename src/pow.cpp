@@ -16,7 +16,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
     // Only change once per difficulty adjustment interval
-    if ((pindexLast->nHeight+1) % params.DifficultyAdjustmentInterval() != 0)
+	uint32_t nHeight = pindexPrev->nHeight + 1;
+    if (nHeight % params.DifficultyAdjustmentInterval() != 0)
     {
         if (params.fPowAllowMinDifficultyBlocks)
         {
@@ -35,16 +36,16 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
             }
         }
         // We can't go below the minimum, so bail early.
-		uint32_t nBits = pindexPrev->nBits;
+		uint32_t nBits = pindexLast->nBits;
 		if (nBits <= nProofOfWorkLimit) {
 			return nProofOfWorkLimit;
 		}
 		// If producing the last 6 blocks took less than 1h, we keep the same
 		// difficulty.
-		const CBlockIndex *pindex6 = pindexPrev->GetAncestor(nHeight - 7);
+		const CBlockIndex *pindex6 = pindexLast->GetAncestor(nHeight - 7);
 		assert(pindex6);
 		int64_t mtp6blocks =
-			pindexPrev->GetMedianTimePast() - pindex6->GetMedianTimePast();
+			pindexLast->GetMedianTimePast() - pindex6->GetMedianTimePast();
 		if (mtp6blocks < 3600) {
 			return nBits;
 		}
