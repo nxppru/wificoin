@@ -34,7 +34,34 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
                 return pindex->nBits;
             }
         }
-        return pindexLast->nBits;
+        // We can't go below the minimum, so bail early.
+		uint32_t nBits = pindexPrev->nBits;
+		if (nBits <= nProofOfWorkLimit) {
+			return nProofOfWorkLimit;
+		}
+		// If producing the last 6 blocks took less than 1h, we keep the same
+		// difficulty.
+		const CBlockIndex *pindex6 = pindexPrev->GetAncestor(nHeight - 7);
+		assert(pindex6);
+		int64_t mtp6blocks =
+			pindexPrev->GetMedianTimePast() - pindex6->GetMedianTimePast();
+		if (mtp6blocks < 3600) {
+			return nBits;
+		}
+
+		// If producing the last 6 blocks took more than 1h, increase the
+		// difficulty target by 1/4 (which reduces the difficulty by 20%).
+		// This ensures that the chain does not get stuck in case we lose
+		// hashrate abruptly.
+		arith_uint256 nPow;
+		nPow.SetCompact(nBits);
+		nPow += (nPow >> 2);
+
+		// Make sure we do not go below allowed values.
+		const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+		if (nPow > bnPowLimit) nPow = bnPowLimit;
+
+		return nPow.GetCompact();
     }
 
     // Go back by what we want to be 1.4 days worth of blocks
@@ -53,10 +80,10 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 
     // Limit adjustment step
     int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    if (nActualTimespan < params.nPowTargetTimespan/2)
-        nActualTimespan = params.nPowTargetTimespan/2;
-    if (nActualTimespan > params.nPowTargetTimespan*2)
-        nActualTimespan = params.nPowTargetTimespan*2;
+    if (nActualTimespan < params.nPowTargetTimespan/4)
+        nActualTimespan = params.nPowTargetTimespan/4;
+    if (nActualTimespan > params.nPowTargetTimespan*4)
+        nActualTimespan = params.nPowTargetTimespan*4;
 
     // Retarget
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
