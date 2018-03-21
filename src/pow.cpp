@@ -40,13 +40,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 		if (nBits <= nProofOfWorkLimit) {
 			return nProofOfWorkLimit;
 		}
-		// If producing the last 6 blocks took less than 1h, we keep the same
+		// If producing the last 6 blocks took less than 12m, we keep the same
 		// difficulty.
 		const CBlockIndex *pindex6 = pindexLast->GetAncestor(nHeight - 7);
 		assert(pindex6);
 		int64_t mtp6blocks =
 			pindexLast->GetMedianTimePast() - pindex6->GetMedianTimePast();
-		if (mtp6blocks < 3600) {
+		if (mtp6blocks < 720) {
 			return nBits;
 		}
 
