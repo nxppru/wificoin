@@ -167,6 +167,13 @@ public:
 			"wMiWEo8oVBKjM25Mx4DVAo1j8VJxKCdR77", 
 			"wgqANUu2RyWiqamp7x8FD1mTKkKy1BZAFu",
 			"wN7Hw4LosbtRMQ8b67eoKR3YuKbrB4Ec8s",
+			"wU84UykooZ4qiXtvaDFgQjqkzZyzXLBWJ1",
+			"wVS4YDuvDHtFxUfWUrZruzX9Luzv8Yvjqb",
+			"wZKpu3btNkUvUhZwmWU9gVkafuUfZxC1Ch",
+			"wKh5nKVEDNkc8iEPkZ2f24rUfM1VwPCE4i",
+			"wdJ5RB9gUTkY47Pbf4PkxaM7KbQjZvj2wE",
+			"wVNNXZDjzNqwDmaGiDtWhiKwFTQ8WYnfZH",
+			"wVEgw3vyyankxgEYdGS95bEJEBt3YxdfJ5",
 		};
 		
 		assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
