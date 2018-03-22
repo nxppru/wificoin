@@ -3230,10 +3230,6 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 	
-	// liudf added 20180308
-	if (!CheckDiffStep(&block, pindexPrev, consensusParams))
-        return state.DoS(100, false, REJECT_INVALID, "bad-diffstep", false, "incorrect step of POW");
-
     // Check against checkpoints
     if (fCheckpointsEnabled) {
         // Don't accept any forks from the main chain prior to last checkpoint.
