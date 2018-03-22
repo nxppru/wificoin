@@ -169,9 +169,9 @@ public:
 			"wVS4YDuvDHtFxUfWUrZruzX9Luzv8Yvjqb",
 			"wZKpu3btNkUvUhZwmWU9gVkafuUfZxC1Ch",
 			"wKh5nKVEDNkc8iEPkZ2f24rUfM1VwPCE4i",
-			"wdJ5RB9gUTkY47Pbf4PkxaM7KbQjZvj2wE",
 			"wVNNXZDjzNqwDmaGiDtWhiKwFTQ8WYnfZH",
 			"wVEgw3vyyankxgEYdGS95bEJEBt3YxdfJ5",
+			"wMhNVCcCjX9JNwdm2AMKneMBZ5RV75nrEu",
 		};
 		
 		assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
