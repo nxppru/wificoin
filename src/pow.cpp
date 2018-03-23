@@ -37,7 +37,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         }
         // We can't go below the minimum, so bail early.
 		uint32_t nBits = pindexLast->nBits;
-		if (nBits <= nProofOfWorkLimit) {
+		if (nBits > nProofOfWorkLimit) {
 			return nProofOfWorkLimit;
 		}
 		// If producing the last 6 blocks took less than 12m, we keep the same
