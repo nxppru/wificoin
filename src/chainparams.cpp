@@ -84,7 +84,7 @@ public:
         consensus.powLimit = uint256S("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1.4 * 24 * 60 * 60; // 1.4 day
         consensus.nPowTargetSpacing =   60;
-        consensus.fPowAllowMinDifficultyBlocks = true; // liudf moidified 20180306
+        consensus.fPowAllowMinDifficultyBlocks = false; // liudf moidified 20180306
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 10944; // 95% of 1440
         consensus.nMinerConfirmationWindow = 11520; // nPowTargetTimespan / nPowTargetSpacing * 8
