@@ -6,4 +6,4 @@ if u r interested in our project or think our project is useful for u, please st
 
 ## wificoin主要用于wifi路由器上，由于wifi的算力较低，所以我们要保证wificoin的挖矿难度低于一定的水平，如果遇到算力恶意攻击，我们会采用更换算法分叉的方式去解决问题。
 
-## 欢迎加入我们的[中文区块链技术社区](https://talk.kunteng.org)一起讨论有关wificoin的技术问题
+## 欢迎加入我们的[技术社区](https://talk.kunteng.org)一起讨论有关wificoin的技术问题
