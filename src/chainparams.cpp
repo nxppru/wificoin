@@ -128,7 +128,8 @@ public:
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("seeds.wificoin.kunteng.org", false); 
         vSeeds.emplace_back("seeds.wificoin.talkblock.org", false); 
-
+		vSeeds.emplace_back("wfcseeds.verywifi.cn", false);
+		
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,135);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
