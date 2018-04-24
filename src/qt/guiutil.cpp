@@ -220,7 +220,7 @@ bool parseWiFicoinURI(QString uri, SendCoinsRecipient *out)
 
 QString formatWiFicoinURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("wificoin:%1").arg(info.address);
+    QString ret = QString("%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
