@@ -17,7 +17,8 @@
 #include "timedata.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "txmempool.h" // Added by zhangzf 20180809
+#include "txmempool.h" // Added by zhangzf 20180209
+#include "consensus/consensus.h" // Added by zhangzf 20180404
 
 #ifdef ENABLE_WALLET
 #include "wallet/rpcwallet.h"
@@ -698,7 +699,18 @@ UniValue getaddressmempool(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unknown address type");
         }
 
+        // Added by zhangzf 20180404. maturely attr.
+        CTransactionRef tx;
+        uint256 hashBlock;
+        int maturely = 1;
+
+        GetTransaction(it->first.txhash, tx, Params().GetConsensus(), hashBlock, true);
+        if (tx->IsCoinBase())
+            if ((chainActive.Height() - it->second.blockHeight) < COINBASE_MATURITY)
+                maturely = 0;
+
         UniValue delta(UniValue::VOBJ);
+        delta.push_back(Pair("maturely", maturely));
         delta.push_back(Pair("address", address));
         delta.push_back(Pair("txid", it->first.txhash.GetHex()));
         delta.push_back(Pair("index", (int)it->first.index));
@@ -778,6 +790,17 @@ UniValue getaddressutxos(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unknown address type");
         }
 
+        // Added by zhangzf 20180404. maturely attr.
+        CTransactionRef tx;
+        uint256 hashBlock;
+        int maturely = 1;
+
+        GetTransaction(it->first.txhash, tx, Params().GetConsensus(), hashBlock, true);
+        if (tx->IsCoinBase())
+            if ((chainActive.Height() - it->second.blockHeight) < COINBASE_MATURITY)
+                maturely = 0;
+
+        output.push_back(Pair("maturely", (int)maturely));
         output.push_back(Pair("address", address));
         output.push_back(Pair("txid", it->first.txhash.GetHex()));
         output.push_back(Pair("outputIndex", (int)it->first.index));
