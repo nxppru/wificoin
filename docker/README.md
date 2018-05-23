@@ -6,8 +6,8 @@ a minimal wificoin runable docker image.
 2. copy `wificoin/Dockerfile` to `./`
 3. run `docker pull registry.cn-hangzhou.aliyuncs.com/wificoin-project/wificoin-run:latest`
 4. run `docker tag registry.cn-hangzhou.aliyuncs.com/wificoin-project/wificoin-run:latest wificoin-run:latest`
-5. run `docker docker build ./ -t wificoin:pre-release`
-6. run `docker run -d -p 9665:9665 -p 9666:9666 -v ~/.wificoin:/root/.wificoin --name wificoin  wificoin:pre-release`
+5. run `docker docker build ./ -t wificoin:latest`
+6. run `docker run -d -p 9665:9665 -p 9666:9666 -v ~/.wificoin:/root/.wificoin --name wificoin  wificoin:latest`
 
 # public image
 
@@ -15,7 +15,7 @@ a minimal wificoin runable docker image.
 docker run -d -p 9665:9665 -p 9666:9666 \
             -v ~/.wificoin:/root/.wificoin \
             --name wificoin \
-            registry.cn-hangzhou.aliyuncs.com/wificoin-project/wificon:pre-release
+            registry.cn-hangzhou.aliyuncs.com/wificoin-project/wificon:latest
 ```
 
 # wificoin.conf in `.wificon`
