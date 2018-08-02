@@ -63,6 +63,8 @@ qq group: 424031785
 
 star our project and support us
 
-## donate（捐助wfc给wificoin开源项目）
-### WFC donation address: weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW
+## donate
+### wfc: [weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW](https://wfc.xyblock.net/#/wifiPortal/donate)
+
+
 
