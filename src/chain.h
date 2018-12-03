@@ -11,6 +11,7 @@
 #include "pow.h"
 #include "tinyformat.h"
 #include "uint256.h"
+#include "chainparams.h"
 
 #include <vector>
 
@@ -416,7 +417,7 @@ public:
         block.nTime           = nTime;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
-        return block.GetHash();
+        return block.GetHash(Params().GetHashSelection(nHeight));
     }
 
 

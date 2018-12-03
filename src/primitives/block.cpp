@@ -9,10 +9,16 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
+#include "validation.h"
 
-uint256 CBlockHeader::GetHash() const
+uint256 CBlockHeader::GetHash(int hash_selection) const
 {
-    return SerializeHash(*this);
+	switch(hash_selection) {
+	case 1:
+		return SerializeHashV2(BEGIN(nVersion), END(nNonce));		
+	default:
+		return SerializeHash(*this);
+	}
 }
 
 std::string CBlock::ToString() const

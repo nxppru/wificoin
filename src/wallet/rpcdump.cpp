@@ -18,6 +18,8 @@
 
 #include "rpcwallet.h"
 
+//#include "chain.h"
+
 #include <fstream>
 #include <stdint.h>
 
@@ -314,11 +316,18 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     std::vector<uint256> vMatch;
     std::vector<unsigned int> vIndex;
     unsigned int txnIndex = 0;
+	int nHeight = 0;
     if (merkleBlock.txn.ExtractMatches(vMatch, vIndex) == merkleBlock.header.hashMerkleRoot) {
 
         LOCK(cs_main);
+		
+		if (!mapBlockIndex.count(merkleBlock.header.hashPrevBlock) || !chainActive.Contains(mapBlockIndex[merkleBlock.header.hashPrevBlock]))
+			throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "prev block not found in chain");
 
-        if (!mapBlockIndex.count(merkleBlock.header.GetHash()) || !chainActive.Contains(mapBlockIndex[merkleBlock.header.GetHash()]))
+		CBlockIndex *bi = mapBlockIndex[merkleBlock.header.hashPrevBlock];
+		nHeight = bi->nHeight + 1;
+
+        if (!mapBlockIndex.count(merkleBlock.header.GetHash(nHeight)) || !chainActive.Contains(mapBlockIndex[merkleBlock.header.GetHash(nHeight)]))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found in chain");
 
         std::vector<uint256>::const_iterator it;
@@ -333,7 +342,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     }
 
     wtx.nIndex = txnIndex;
-    wtx.hashBlock = merkleBlock.header.GetHash();
+    wtx.hashBlock = merkleBlock.header.GetHash(nHeight);
 
     LOCK2(cs_main, pwallet->cs_wallet);
 

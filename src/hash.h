@@ -8,6 +8,7 @@
 
 #include "crypto/ripemd160.h"
 #include "crypto/sha256.h"
+#include "crypto/sha512.h"
 #include "prevector.h"
 #include "serialize.h"
 #include "uint256.h"
@@ -242,5 +243,17 @@ public:
  */
 uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val);
 uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra);
+
+template<typename T1>
+inline uint256 SerializeHashV2(const T1 pbegin, const T1 pend)
+{
+	unsigned char buf[CSHA512::OUTPUT_SIZE] = {0};
+	static const unsigned char pblank[1] = {0};
+	uint256 result;
+	CSHA512().Write((pbegin==pend)?pblank:(const unsigned char*)&pbegin[0], (pend - pbegin) * sizeof(pbegin[0]))
+              .Finalize(buf);
+	CSHA256().Write(buf, CSHA512::OUTPUT_SIZE).Finalize((unsigned char *)&result);
+	return result;
+}
 
 #endif // WIFICOIN_HASH_H
