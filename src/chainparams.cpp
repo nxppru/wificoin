@@ -398,7 +398,7 @@ std::string CChainParams::GetFoundersRewardAddressAtIndex(int i) const {
 }
 
 int CChainParams::GetHashSelection(int height) const {
-	if (height <= nSwitchHashHeight)
+	if (height < nSwitchHashHeight)
 		return 0;
 	else
 		return 1;

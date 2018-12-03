@@ -17,6 +17,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     // Only change once per difficulty adjustment interval
 	uint32_t nHeight = pindexLast->nHeight + 1;
+	if (nHeight == Params().GetSwitchHashHeight()) {
+		return nProofOfWorkLimit; 
+	}
+
     if (nHeight % params.DifficultyAdjustmentInterval() != 0)
     {
         if (params.fPowAllowMinDifficultyBlocks)

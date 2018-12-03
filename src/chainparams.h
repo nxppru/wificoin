@@ -82,6 +82,7 @@ public:
     CScript GetFoundersRewardScriptAtHeight(int height) const;
     std::string GetFoundersRewardAddressAtIndex(int i) const;
 	int GetHashSelection(int height) const;
+	int GetSwitchHashHeight() const { return nSwitchHashHeight; };
 protected:
     CChainParams() {}
 
