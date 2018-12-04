@@ -238,7 +238,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 		
-		vSeeds.emplace_back("wifidog.kunteng.org", false); // liudf for test 
+        vSeeds.emplace_back("seeds.wificoin.talkblock.org", false); 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,95);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
