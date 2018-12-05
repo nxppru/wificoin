@@ -316,7 +316,6 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     std::vector<uint256> vMatch;
     std::vector<unsigned int> vIndex;
     unsigned int txnIndex = 0;
-	int nHeight = 0;
     if (merkleBlock.txn.ExtractMatches(vMatch, vIndex) == merkleBlock.header.hashMerkleRoot) {
 
         LOCK(cs_main);
@@ -335,7 +334,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     }
 
     wtx.nIndex = txnIndex;
-    wtx.hashBlock = merkleBlock.header.GetHash(nHeight);
+    wtx.hashBlock = merkleBlock.header.GetHash();
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
