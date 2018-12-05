@@ -82,7 +82,7 @@ public:
     CScript GetFoundersRewardScriptAtHeight(int height) const;
     std::string GetFoundersRewardAddressAtIndex(int i) const;
 	uint32_t GetSwitchTime() const { return nSwitchTime; };
-	int32_t GetSwitchHeight() const { return nSwitchHeight; };
+	uint32_t GetSwitchHeight() const { return nSwitchHeight; };
 protected:
     CChainParams() {}
 
@@ -102,7 +102,7 @@ protected:
     ChainTxData chainTxData;
 	std::vector<std::string> vFoundersRewardAddress;
 	uint32_t nSwitchTime;
-	int32_t nSwitchHeight;
+	uint32_t nSwitchHeight;
 };
 
 /**
