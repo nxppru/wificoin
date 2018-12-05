@@ -417,7 +417,7 @@ public:
         block.nTime           = nTime;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
-        return block.GetHash(Params().GetHashSelection(nHeight));
+        return block.GetHash();
     }
 
 

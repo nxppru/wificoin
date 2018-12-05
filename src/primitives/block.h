@@ -60,7 +60,7 @@ public:
         return (nBits == 0);
     }
 
-    uint256 GetHash(int hash_selection = 0) const;
+    uint256 GetHash() const;
 
     int64_t GetBlockTime() const
     {

@@ -81,8 +81,8 @@ public:
     std::string GetFoundersRewardAddressAtHeight(int height) const;
     CScript GetFoundersRewardScriptAtHeight(int height) const;
     std::string GetFoundersRewardAddressAtIndex(int i) const;
-	int GetHashSelection(int height) const;
-	int GetSwitchHashHeight() const { return nSwitchHashHeight; };
+	uint32_t GetSwitchTime() const { return nSwitchTime; };
+	int32_t GetSwitchHeight() const { return nSwitchHeight; };
 protected:
     CChainParams() {}
 
@@ -101,7 +101,8 @@ protected:
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
 	std::vector<std::string> vFoundersRewardAddress;
-	int nSwitchHashHeight;
+	uint32_t nSwitchTime;
+	int32_t nSwitchHeight;
 };
 
 /**

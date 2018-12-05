@@ -11,9 +11,10 @@
 #include "crypto/common.h"
 #include "validation.h"
 
-uint256 CBlockHeader::GetHash(int hash_selection) const
+uint256 CBlockHeader::GetHash() const
 {
-	switch(hash_selection) {
+	int hashSelection = (nTime > Params().GetSwitchTime())?1:0;
+	switch(hashSelection) {
 	case 1:
 		return SerializeHashV2(BEGIN(nVersion), END(nNonce));		
 	default:

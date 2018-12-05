@@ -108,7 +108,8 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x01"); 
 
-		nSwitchHashHeight = 740000;
+		nSwitchTime = 1544000900;
+		nSwitchHeight = 725173;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -220,7 +221,8 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
 		
-		nSwitchHashHeight = 1000;
+		nSwitchTime = 1544033400;
+		nSwitchHeight = 1000;
 	
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
@@ -397,9 +399,3 @@ std::string CChainParams::GetFoundersRewardAddressAtIndex(int i) const {
     return vFoundersRewardAddress[i];
 }
 
-int CChainParams::GetHashSelection(int height) const {
-	if (height < nSwitchHashHeight)
-		return 0;
-	else
-		return 1;
-}
