@@ -248,11 +248,15 @@ template<typename T1>
 inline uint256 SerializeHashV2(const T1 pbegin, const T1 pend)
 {
 	unsigned char buf[CSHA512::OUTPUT_SIZE] = {0};
+	unsigned char buf2[CSHA512::OUTPUT_SIZE] = {0};
 	static const unsigned char pblank[1] = {0};
+	uint512 tmp;
 	uint256 result;
 	CSHA512().Write((pbegin==pend)?pblank:(const unsigned char*)&pbegin[0], (pend - pbegin) * sizeof(pbegin[0]))
               .Finalize(buf);
-	CSHA256().Write(buf, CSHA512::OUTPUT_SIZE).Finalize((unsigned char *)&result);
+	CSHA512().Reset();
+	CSHA512().Write(buf, CSHA512::OUTPUT_SIZE).Finalize(buf2);
+	CSHA256().Write(buf2, CSHA512::OUTPUT_SIZE).Finalize((unsigned char *)&result);
 	return result;
 }
 
