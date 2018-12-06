@@ -124,7 +124,7 @@ public:
         nPruneAfterHeight = 100000;
 
         genesis = CreateGenesisBlock(1521003343, 1599, 0x1f0fffff, 1, 50 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetGenesisHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000ac30ada38ecdf3386074d2155eedb1452902a9c736977b95e1e0dde43aec4"));
         assert(genesis.hashMerkleRoot == uint256S("0x9b6d4138319edb7009d1536ee37c7c1c74e7a0eaa5e6c5243625f9635f4bd996"));
 
@@ -221,7 +221,7 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
 		
-		nSwitchTime = 1544033400;
+		nSwitchTime = gArgs.GetArg("-switchtime", 1544066813); 
 		nSwitchHeight = 1000;
 	
         pchMessageStart[0] = 0x0b;
@@ -232,7 +232,7 @@ public:
         nPruneAfterHeight = 1000;
 
 		genesis = CreateGenesisBlock(1521003343, 1599, 0x1f0fffff, 1, 50 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetGenesisHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000ac30ada38ecdf3386074d2155eedb1452902a9c736977b95e1e0dde43aec4"));
         assert(genesis.hashMerkleRoot == uint256S("0x9b6d4138319edb7009d1536ee37c7c1c74e7a0eaa5e6c5243625f9635f4bd996"));
 		
@@ -313,7 +313,7 @@ public:
         nPruneAfterHeight = 1000;
 
 		genesis = CreateGenesisBlock(1516254420, 3625992097, 0x1d00ffff, 1, 50 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetGenesisHash();
         assert(consensus.hashGenesisBlock == uint256S("0x0000000025f2cf92357359e4dc3eca8c70937751605f8e6bc256e5f27bd1c5b4"));
         assert(genesis.hashMerkleRoot == uint256S("0xbb027ccd7fdfc2b6b492ea4f940e89b1512d936472e66015e38a3d876e4dc17b"));
 
