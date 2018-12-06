@@ -222,7 +222,7 @@ public:
         consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
 		
 		nSwitchTime = gArgs.GetArg("-switchtime", 1544066813); 
-		nSwitchHeight = 1000;
+		nSwitchHeight = 10000;
 	
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
