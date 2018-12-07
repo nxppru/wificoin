@@ -575,17 +575,17 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
     if (!sc.found) {
         return error("inconclusive");
     }
-	if (state.IsValid())
+	if (sc.state.IsValid())
         return true;
 
     std::string strRejectReason = sc.state.GetRejectReason();
     if (sc.state.IsError())
-        return error(strRejectReason);
+        return error(strRejectReason.c_str());
     if (sc.state.IsInvalid())
     {
         if (strRejectReason.empty())
             return error("rejected");
-        return error(strRejectReason);
+        return error(strRejectReason.c_str());
     }
     // Should be impossible
     return error("valid?");
@@ -711,7 +711,7 @@ void static WiFicoinMiner(const CChainParams& chainparams)
     }
 }
 
-void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainparams)
+void GenerateWiFicoins(bool fGenerate, int nThreads, const CChainParams& chainparams)
 {
     static boost::thread_group* minerThreads = NULL;
 
