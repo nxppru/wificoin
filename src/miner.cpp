@@ -28,9 +28,13 @@
 #include "validationinterface.h"
 #include "base58.h"
 
+#include <boost/thread.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <algorithm>
 #include <queue>
 #include <utility>
+
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////
 //
