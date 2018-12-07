@@ -529,23 +529,64 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
 {
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue));
-
-    // Found a solution
-    {
-        LOCK(cs_main);
-        if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
-            return error("BitcoinMiner: generated block is stale");
+	
+	if (pblock->vtx.empty() || !pblock->vtx[0]->IsCoinBase()) {
+        return error("Block does not start with a coinbase");
     }
 
-    // Inform about the new block
-    GetMainSignals().BlockFound(pblock->GetHash());
+    uint256 hash = pblock->GetHash();
+    bool fBlockPresent = false;
+    {
+        LOCK(cs_main);
+        BlockMap::iterator mi = mapBlockIndex.find(hash);
+        if (mi != mapBlockIndex.end()) {
+            CBlockIndex *pindex = mi->second;
+            if (pindex->IsValid(BLOCK_VALID_SCRIPTS)) {
+                return error("duplicate");
+            }
+            if (pindex->nStatus & BLOCK_FAILED_MASK) {
+                return error("duplicate-invalid");
+            }
+            // Otherwise, we might only have the header - process the block before returning
+            fBlockPresent = true;
+        }
+    }
 
-    // Process this block the same as if we had received it from another node
-    CValidationState state;
-    if (!ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL))
-        return error("BitcoinMiner: ProcessNewBlock, block not accepted");
+    {
+        LOCK(cs_main);
+        BlockMap::iterator mi = mapBlockIndex.find(pblock->hashPrevBlock);
+        if (mi != mapBlockIndex.end()) {
+            UpdateUncommittedBlockStructures(*pblock, mi->second, Params().GetConsensus());
+        }
+    }
 
-    return true;
+    submitblock_StateCatcher sc(pblock->GetHash());
+    RegisterValidationInterface(&sc);
+    bool fAccepted = ProcessNewBlock(Params(), *pblock, true, nullptr);
+    UnregisterValidationInterface(&sc);
+    if (fBlockPresent) {
+        if (fAccepted && !sc.found) {
+            return error("duplicate-inconclusive");
+        }
+        return error("duplicate");
+    }
+    if (!sc.found) {
+        return error("inconclusive");
+    }
+	if (state.IsValid())
+        return true;
+
+    std::string strRejectReason = sc.state.GetRejectReason();
+    if (sc.state.IsError())
+        return error(strRejectReason);
+    if (sc.state.IsInvalid())
+    {
+        if (strRejectReason.empty())
+            return error("rejected");
+        return error(strRejectReason);
+    }
+    // Should be impossible
+    return error("valid?");
 }
 
 void static WiFicoinMiner(const CChainParams& chainparams)
@@ -618,7 +659,7 @@ void static WiFicoinMiner(const CChainParams& chainparams)
                         assert(hash == pblock->GetHash());
 
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("BitcoinMiner:\n");
+                        LogPrintf("WiFicoinMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
