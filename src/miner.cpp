@@ -27,6 +27,8 @@
 #include "utilmoneystr.h"
 #include "validationinterface.h"
 #include "base58.h"
+#include "rpc/mining.h"
+#include "validation.h"
 
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
