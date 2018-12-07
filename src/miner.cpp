@@ -598,19 +598,11 @@ void static WiFicoinMiner(const CChainParams& chainparams)
     RenameThread("wificoin-miner");
 
     unsigned int nExtraNonce = 0;
-
-    boost::shared_ptr<CReserveScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript);
-
+	static std::unique_ptr<CBlockTemplate> pblocktemplate;
+	
     try {
-        // Throw an error if no script was provided.  This can happen
-        // due to some internal error but also if the keypool is empty.
-        // In the latter case, already the pointer is NULL.
-        if (!coinbaseScript || coinbaseScript->reserveScript.empty())
-            throw std::runtime_error("No coinbase script available (mining requires a wallet)");
-
         while (true) {
-            if (chainparams.MiningRequiresPeers()) {
+            if (true) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
@@ -630,13 +622,15 @@ void static WiFicoinMiner(const CChainParams& chainparams)
             //
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
             CBlockIndex* pindexPrev = chainActive.Tip();
-
-            auto_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinbaseScript->reserveScript));
-            if (!pblocktemplate.get())
-            {
-                LogPrintf("Error in WiFicoinMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+			
+			// Create new block
+			CScript scriptDummy = CScript() << OP_TRUE;
+			pblocktemplate = BlockAssembler(Params()).CreateNewBlock(scriptDummy, false);
+			if (!pblocktemplate) {
+				LogPrintf("Error in WiFicoinMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
-            }
+			}
+            
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
