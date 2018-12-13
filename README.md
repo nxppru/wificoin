@@ -52,7 +52,7 @@ git clone https://github.com/wificoin-project/wificoin
 
 ./autogen.sh
 
-./configure
+./configure --disable-tests
 
 make -j4
 
