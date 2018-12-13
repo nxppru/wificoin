@@ -489,6 +489,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 }
 
+#if	0
 //////////////////////////////////////////////////////////////////////////////
 //
 // Internal miner
@@ -530,7 +531,6 @@ bool static ScanHash(const CBlockHeader *pblock, uint32_t& nNonce, uint256 *phas
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
 {
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue));
 	
 	if (pblock->vtx.empty() || !pblock->vtx[0]->IsCoinBase()) {
         return error("Block does not start with a coinbase");
@@ -554,17 +554,10 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
         }
     }
 
-    {
-        LOCK(cs_main);
-        BlockMap::iterator mi = mapBlockIndex.find(pblock->hashPrevBlock);
-        if (mi != mapBlockIndex.end()) {
-            UpdateUncommittedBlockStructures(*pblock, mi->second, Params().GetConsensus());
-        }
-    }
-
     submitblock_StateCatcher sc(pblock->GetHash());
     RegisterValidationInterface(&sc);
-    bool fAccepted = ProcessNewBlock(Params(), *pblock, true, nullptr);
+	std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+    bool fAccepted = ProcessNewBlock(Params(), shared_pblock, true, nullptr);
     UnregisterValidationInterface(&sc);
     if (fBlockPresent) {
         if (fAccepted && !sc.found) {
@@ -594,7 +587,6 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
 void static WiFicoinMiner(const CChainParams& chainparams)
 {
     LogPrintf("WiFicoinMiner started\n");
-    SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("wificoin-miner");
 
     unsigned int nExtraNonce = 0;
@@ -654,11 +646,9 @@ void static WiFicoinMiner(const CChainParams& chainparams)
                         pblock->nNonce = nNonce;
                         assert(hash == pblock->GetHash());
 
-                        SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         LogPrintf("WiFicoinMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, chainparams);
-                        SetThreadPriority(THREAD_PRIORITY_LOWEST);
                         coinbaseScript->KeepScript();
 
                         // In regression test mode, stop mining after a block is found.
@@ -725,3 +715,4 @@ void GenerateWiFicoins(bool fGenerate, int nThreads, const CChainParams& chainpa
     for (int i = 0; i < nThreads; i++)
         minerThreads->create_thread(boost::bind(&WiFicoinMiner, boost::cref(chainparams)));
 }
+#endif

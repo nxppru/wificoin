@@ -21,7 +21,8 @@ uint256 CBlockHeader::GetHash() const
 	int hashSelection = (nTime > Params().GetSwitchTime())?1:0;
 	switch(hashSelection) {
 	case 1:
-		return SerializeHashV2(BEGIN(nVersion), END(nNonce));		
+		return HashX16R(BEGIN(nVersion), END(nNonce), hashPrevBlock);
+		//return SerializeHashV2(BEGIN(nVersion), END(nNonce));		
 	default:
 		return SerializeHash(*this);
 	}
